@@ -1,0 +1,622 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="6/19/2019 12:10:55 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="EDSLAPTOP"
+  DTS:CreatorName="EdsLaptop\togethere"
+  DTS:Description="Load VIN Marketing data from Google Sheets"
+  DTS:DTSID="{9B5D4C0E-12BB-451C-876F-2AFC2A0233DE}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1300.375"
+  DTS:LocaleID="1033"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="VIN_MarketingLoad"
+  DTS:VersionBuild="1"
+  DTS:VersionGUID="{93BE30BC-6EC3-4FED-8BAE-ED230AAC288F}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{490302A6-F975-415F-AAB3-2042AC2438CB}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=edslaptop;Initial Catalog=ITG;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionExcel]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{D4D96103-8D86-48BF-8D86-091D007F8CE4}"
+      DTS:ObjectName="SourceConnectionExcel">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\dbBackups\Fleet_VIN.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Truncate_VIN_Marketing"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Truncate the VIN Marketing table for new data"
+      DTS:DTSID="{0F8CEF44-CAA4-43EC-8DE4-5F368CB37A26}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate_VIN_Marketing"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{490302A6-F975-415F-AAB3-2042AC2438CB}"
+          SQLTask:BypassPrepare="False"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE [dbo].[VIN_Marketing]&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\VIN_Marketing_Load"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DTSID="{47E74EC8-0470-462E-8FBB-5D955B3A577E}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="VIN_Marketing_Load"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Data Conversion"
+              name="Data Conversion 0 - 0"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input]"
+                  name="Data Conversion Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Months]"
+                      cachedDataType="r8"
+                      cachedName="Months"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Months]" />
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Mileage]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Mileage"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Mileage]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output]"
+                  exclusionGroup="1"
+                  name="Data Conversion Output"
+                  synchronousInputId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Months]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Months]"
+                      name="Months"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Months]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Mileage]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Mileage]"
+                      name="Mileage"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Mileage]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Data Conversion Error Output"
+                  synchronousInputId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - VIN_Marketing"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[VIN_Marketing]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].Columns[VIn]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="VIn"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[VIn]"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[VIn]" />
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].Columns[OwnerName]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="OwnerName"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[OwnerName]"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[OwnerName]" />
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].Columns[Months]"
+                      cachedDataType="i4"
+                      cachedName="Months"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[Months]"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Months]" />
+                    <inputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].Columns[Mileage]"
+                      cachedDataType="i4"
+                      cachedName="Mileage"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[Mileage]"
+                      lineageId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Mileage]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[VIn]"
+                      dataType="wstr"
+                      length="255"
+                      name="VIn" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[OwnerName]"
+                      dataType="wstr"
+                      length="255"
+                      name="OwnerName" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[Months]"
+                      dataType="i4"
+                      name="Months" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input].ExternalColumns[Mileage]"
+                      dataType="i4"
+                      name="Mileage" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\VIN_Marketing_Load\Source - VINs$"
+              componentClassID="Microsoft.ExcelSource"
+              contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Excel Source"
+              name="Source - VINs$"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">VINs$</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mapping from parameters in the SQL command to variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\VIN_Marketing_Load\Source - VINs$.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionExcel]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionExcel]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output]"
+                  name="Excel Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[VIn]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[VIn]"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[VIn]"
+                      name="VIn"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[OwnerName]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[OwnerName]"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[OwnerName]"
+                      name="OwnerName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Months]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[Months]"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Months]"
+                      name="Months"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Mileage]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[Mileage]"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].Columns[Mileage]"
+                      name="Mileage"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[VIn]"
+                      dataType="wstr"
+                      length="255"
+                      name="VIn" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[OwnerName]"
+                      dataType="wstr"
+                      length="255"
+                      name="OwnerName" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[Months]"
+                      dataType="r8"
+                      name="Months" />
+                    <externalMetadataColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output].ExternalColumns[Mileage]"
+                      dataType="wstr"
+                      length="255"
+                      name="Mileage" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output]"
+                  isErrorOut="true"
+                  name="Excel Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[VIn]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[VIn]"
+                      name="VIn" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[OwnerName]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[OwnerName]"
+                      name="OwnerName" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[Months]"
+                      dataType="r8"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[Months]"
+                      name="Months" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[Mileage]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[Mileage]"
+                      name="Mileage" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\VIN_Marketing_Load.Paths[Data Conversion Output]"
+              endId="Package\VIN_Marketing_Load\Destination - VIN_Marketing.Inputs[Destination Input]"
+              name="Data Conversion Output"
+              startId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\VIN_Marketing_Load.Paths[Excel Source Output]"
+              endId="Package\VIN_Marketing_Load\Data Conversion 0 - 0.Inputs[Data Conversion Input]"
+              name="Excel Source Output"
+              startId="Package\VIN_Marketing_Load\Source - VINs$.Outputs[Excel Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{D53FDCB6-D8B0-4A53-B566-8F5026AFD04C\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{D53FDCB6-D8B0-4A53-B566-8F5026AFD04C}"
+      DTS:From="Package\Truncate_VIN_Marketing"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{D53FDCB6-D8B0-4A53-B566-8F5026AFD04C}"
+      DTS:To="Package\VIN_Marketing_Load" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="176,41.6"
+          Id="Package\VIN_Marketing_Load"
+          TopLeft="306.033321995206,166.033333801693" />
+        <NodeLayout
+          Size="197.6,41.6"
+          Id="Package\Truncate_VIN_Marketing"
+          TopLeft="295.499988476436,63.0466671240065" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[{D53FDCB6-D8B0-4A53-B566-8F5026AFD04C\}]"
+          TopLeft="394.166655235821,104.646667124006">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,61.3866666776867"
+              Start="0,0"
+              End="0,53.8866666776867">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.8866666776867" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\VIN_Marketing_Load">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="148.8,41.6"
+          Id="Package\VIN_Marketing_Load\Source - VINs$"
+          TopLeft="289.766656547123,22.8333334710862" />
+        <NodeLayout
+          Size="208,41.6"
+          Id="Package\VIN_Marketing_Load\Destination - VIN_Marketing"
+          TopLeft="260.166656547123,226.033333471086" />
+        <NodeLayout
+          Size="179.2,41.6"
+          Id="Package\VIN_Marketing_Load\Data Conversion 0 - 0"
+          TopLeft="274.566656547123,124.433333471086" />
+        <EdgeLayout
+          Id="Package\VIN_Marketing_Load.Paths[Excel Source Output]"
+          TopLeft="364.166656547123,64.4333334710862">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.9999999999999"
+              Start="0,0"
+              End="0,52.4999999999999">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.4999999999999" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\VIN_Marketing_Load.Paths[Data Conversion Output]"
+          TopLeft="364.166656547123,166.033333471086">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

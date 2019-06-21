@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "SSIS_VIN_Marketing_Load", "SSIS_VIN_Marketing_Load\SSIS_VIN_Marketing_Load.dtproj", "{D8A28905-1FE0-4694-A95A-D5FB34603888}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8A28905-1FE0-4694-A95A-D5FB34603888}.Development|Default.ActiveCfg = Development
+		{D8A28905-1FE0-4694-A95A-D5FB34603888}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3206B84-3593-4285-A147-A6E17F8BE6C0}
+	EndGlobalSection
+EndGlobal
